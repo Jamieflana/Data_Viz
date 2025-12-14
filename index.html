@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transfer Market Strategies Across Europe's Top Leagues</title>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+  <div id="page">
+    <h1 class="page-title">Transfer Market Behaviour across top football leagues</h1>
+
+    <!-- TOP ROW -->
+    <div id="topRow" class="row">
+      <div id="topCharts">
+        <section id="scatterSection" class="panel scatterPanel">
+          <h2>Strategic Positioning: Age vs Spending</h2>
+          <div id="scatter"></div>
+        </section>
+
+        <section id="barSection" class="panel barPanel">
+          <h2>Transfer Composition by League</h2>
+          <div id="barchart"></div>
+        </section>
+      </div>
+
+      <aside id="controlPanel" class="panel">
+        <h3>Filters</h3>
+
+        <div class="section">
+          <label for="leagueSelect">League</label>
+          <select id="leagueSelect">
+            <option value="ALL">All Leagues</option>
+            <option value="GB1">Premier League</option>
+            <option value="ES1">La Liga</option>
+            <option value="IT1">Serie A</option>
+            <option value="FR1">Ligue 1</option>
+            <option value="L1">Bundesliga</option>
+          </select>
+        </div>
+
+        <div class="section">
+          <label for="yearMode">Mode</label>
+          <select id="yearMode">
+            <option value="single">Single Year</option>
+            <option value="range">Year Range</option>
+          </select>
+        </div>
+
+        <div class="section">
+          <button id="playBtn" type="button">▶ Play</button>
+        </div>
+
+        <!-- Single Year Controls -->
+        <div class="section" id="singleYearControls">
+          <div class="section-title">Season</div>
+          <input type="range" id="seasonSlider" min="2009" max="2021" value="2021" />
+          <div id="seasonLabel" class="seasonLabel">2021</div>
+        </div>
+
+        <!-- Range Year Controls -->
+        <div class="section" id="rangeYearControls" style="display: none;">
+          <div class="year-range-header">
+            <span>Year Range</span>
+            <span id="inlineRangeLabel">2009–2021</span>
+          </div>
+
+          <div class="range-block">
+            <div class="range-caption">Start Year</div>
+            <input type="range" id="startYearSlider" min="2009" max="2021" value="2009" />
+            <div id="startYearLabel" class="range-value">2009</div>
+          </div>
+
+          <div class="range-block">
+            <div class="range-caption">End Year</div>
+            <input type="range" id="endYearSlider" min="2009" max="2021" value="2021" />
+            <div id="endYearLabel" class="range-value">2021</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div id="bottomCharts" class="row">
+      <section id="choroplethSection" class="panel choroplethPanel">
+        <h2>Geographic Sources of Transfers</h2>
+        <div id="choropleth"></div>
+      </section>
+
+      <section id="sankeySection" class="panel sankeyPanel">
+        <h2>Region-to-League Transfer Flow</h2>
+        <div id="sankey"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="js/scatter.js"></script>
+  <script src="js/choropleth.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/barchart.js"></script>
+  <script src="country_region.js"></script>
+  <script src="js/sankey.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

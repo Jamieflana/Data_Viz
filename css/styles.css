@@ -1,0 +1,357 @@
+/* ---------------------------------------------------
+   GLOBAL
+---------------------------------------------------- */
+:root{
+  --bg:#1e1f26;
+  --panel:#2a2c38;
+  --panel-2:#2f3140;
+  --text:#e6e6e6;
+  --muted:#dcdcdc;
+  --border:#404357;
+  --accent:#4A90E2;
+}
+
+*{ box-sizing:border-box; }
+
+html, body{
+  height:100%;
+  margin:0;
+  padding:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Segoe UI", Arial, sans-serif;
+
+  /* Key for “one page” requirement */
+  overflow:hidden;
+}
+
+h1,h2,h3,h4,h5,h6{
+  margin:0;
+  padding:0;
+}
+
+/* ---------------------------------------------------
+   PAGE STRUCTURE
+---------------------------------------------------- */
+#page{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+
+  /* reduce padding so everything fits at 100% zoom */
+  padding:10px 16px 12px 16px;
+  max-width:1600px;
+  margin:0 auto;
+}
+
+.page-title{
+  font-size:24px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:0.3px;
+  line-height:1.1;
+}
+
+/* ---------------------------------------------------
+   ROW LAYOUT
+---------------------------------------------------- */
+.row{
+  width:100%;
+  display:flex;
+  gap:12px;
+  min-height:0; /* important: lets children shrink without forcing overflow */
+}
+
+#topRow{
+  flex: 0 0 auto;
+  min-height:0;
+}
+
+#topCharts{
+  flex:1;
+  display:flex;
+  gap:12px;
+  min-width:0;
+}
+
+/* ---------------------------------------------------
+   PANEL BASE STYLING
+---------------------------------------------------- */
+.panel{
+  background:var(--panel);
+  padding:10px 14px;
+  border-radius:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.4);
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  min-height:0; /* critical for one-page fitting */
+}
+
+.panel > div{
+  flex:1;
+  width:100%;
+  height:100%;
+  min-height:0;
+}
+
+.panel h2{
+  color:#e4ecf5ff;
+  font-size:16px;   /* slightly smaller so headers don’t steal vertical space */
+  font-weight:650;
+  margin-bottom:6px;
+}
+
+/* ---------------------------------------------------
+   HEIGHT BUDGET (one-page layout)
+   Total: title + gaps + topRow + bottomRow = ~100vh
+---------------------------------------------------- */
+#topRow{
+  height:46vh;
+}
+
+#bottomCharts{
+  height:calc(54vh - 12px); /* compensates for gap */
+}
+
+/* Top row panels */
+.scatterPanel{
+  flex:1.1;
+  height:100%;
+}
+
+.barPanel{
+  flex:0 0 clamp(360px, 28vw, 440px);
+  height:100%;
+}
+
+/* Bottom row panels */
+.choroplethPanel{
+  flex:1.15;
+  height:100%;
+}
+
+.sankeyPanel{
+  flex:1;
+  height:100%;
+  overflow:visible;
+}
+
+/* ---------------------------------------------------
+   CONTROL PANEL
+---------------------------------------------------- */
+#controlPanel > div{
+  flex: 0 0 auto;
+  height: auto;
+}
+
+#controlPanel{
+  flex: 0 0 220px;
+  background: var(--panel-2);
+
+  /* compact */
+  padding: 6px;
+  gap: 0;
+
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title */
+#controlPanel h3{
+  margin: 0;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.1;
+  padding: 0 0 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+/* Sections: compact, no overlap */
+#controlPanel .section{
+  margin: 0;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Space ONLY between sections (not under title) */
+#controlPanel .section + .section{
+  margin-top: 2px;
+}
+
+#controlPanel .section:last-child{
+  border-bottom: none;
+  padding-bottom: 2px;
+}
+#playSection{ padding-bottom: 0; border-bottom: none; }
+#playSection + .section{ margin-top: 0; }
+
+/* Labels */
+#controlPanel label{
+  display: block;
+  margin: 0 0 2px 0;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.05;
+  color: var(--muted);
+}
+
+/* Dropdowns */
+#controlPanel select{
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 3px 6px;
+  font-size: 11px;
+  line-height: 1.05;
+
+  border-radius: 6px;
+  border: 1px solid #5a5e78;
+  background: #3a3d4f;
+  color: var(--text);
+}
+
+/* Slider */
+#controlPanel input[type="range"]{
+  display: block;
+  width: 100%;
+  margin: 2px 0 0 0;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* Button */
+#controlPanel button{
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 5px 8px;
+
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#controlPanel button:hover{
+  background: #357ABD;
+}
+
+/* Year controls text */
+/* CONTROL PANEL SUB-HEADINGS (Season, Year Range, etc.) */
+#controlPanel .section-title,
+#controlPanel .year-range-header,
+#controlPanel .year-range-header span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+
+#inlineRangeLabel{
+  font-size: 11px;
+  font-weight: 700;
+  color: #bfc3d1;
+}
+
+.range-block{
+  margin-bottom: 4px;
+}
+
+.range-value,
+#seasonLabel{
+  margin: 2px 0 0 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: #e6e6e6;
+}
+
+/* ==================================================
+   RANGE SELECTOR – COMPACT + FITS PANEL
+   (drop-in fix)
+================================================== */
+
+/* Header row: "Year Range 2009–2021" */
+#controlPanel .year-range-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+
+  margin: 4px 0 4px 0;
+}
+
+/* Each slider block (Start / End) */
+#controlPanel .range-block{
+  margin-bottom: 6px;
+}
+
+/* "Start Year" / "End Year" labels */
+#controlPanel .range-caption{
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+/* Slider itself — THIS is the big win */
+#controlPanel #rangeYearControls input[type="range"]{
+  height: 12px;              /* shrinks vertical footprint */
+  margin: 2px 0 0 0;
+}
+
+/* Numeric value under slider */
+#controlPanel .range-value{
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 2px;
+  text-align: center;
+}
+
+
+
+
+/* ---------------------------------------------------
+   SANKEY STYLE
+---------------------------------------------------- */
+.sankey-node rect{ stroke:#ccc; stroke-width:1; }
+.sankey-node text{ font-size:12px; font-weight:600; fill:#f0f0f0; }
+.sankey-link{ opacity:0.45; transition:opacity 0.2s ease; }
+.sankey-link:hover{ opacity:0.85 !important; }
+
+/* ---------------------------------------------------
+   RESPONSIVE BREAKPOINTS
+---------------------------------------------------- */
+@media (max-width: 1200px){
+  html, body{ overflow:auto; } /* allow scroll on small screens */
+  #page{ height:auto; overflow:auto; }
+  #topRow, #bottomCharts{ height:auto; }
+  #topRow{ flex-direction:column; }
+  #topCharts{ flex-direction:column; }
+  #controlPanel{ flex:1; width:auto; }
+  .scatterPanel,.barPanel,.choroplethPanel,.sankeyPanel{ height:420px; }
+}
+
+@media (max-width: 900px){
+  #bottomCharts{ flex-direction:column; }
+  .choroplethPanel,.sankeyPanel{ height:420px; }
+}

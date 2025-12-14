@@ -1,0 +1,32 @@
+{
+  "leagues": {
+    "GB1": "English Premier League",
+    "IT1": " Seria A",
+    "L1": "Bundesliga",
+    "FR1": "French Ligue 1",
+    "POR": "Portugal BWIN",
+    "NL1": "Erdivise",
+    "ES1": "La liga",
+    "All" : "All leagues"
+  },
+  "transfer_windows": {
+    "s": "Summer",
+    "w": "Winter"
+  },
+  "directions": {
+    "in": "Incoming Transfer",
+    "out": "Outgoing Transfer"
+  },
+  "positions": {
+    "GK": "Goalkeeper",
+    "CB": "Centre Back",
+    "RB": "Right Back",
+    "LB": "Left Back",
+    "DM": "Defensive Midfielder",
+    "CM": "Central Midfielder",
+    "AM": "Attacking Midfielder",
+    "RW": "Right Winger",
+    "LW": "Left Winger",
+    "CF": "Centre Forward"
+  }
+}
