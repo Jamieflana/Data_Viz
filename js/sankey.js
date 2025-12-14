@@ -173,9 +173,9 @@ function updateSankey(data) {
   //5. SVG SETUP (ONCE) + PERSISTENT LAYERS
 
   const container = document.getElementById("sankey");
-  sankeyWidth = container.clientWidth - 40;
-  sankeyHeight = 260;
-
+  sankeyWidth = container.clientWidth - 30;
+  sankeyHeight = container.clientHeight;
+  console.log("Sankey height", sankeyHeight);
   if (!sankeySVG) {
     d3.select("#sankey").select("svg").remove();
 
@@ -188,7 +188,7 @@ function updateSankey(data) {
 
     sankeyMainGroup = sankeySVG
       .append("g")
-      .attr("transform", "translate(90, 0)");
+      .attr("transform", "translate(89, 30)");
 
     // Create layers once
     sankeySVG.append("defs").attr("class", "sankey-defs");
@@ -430,7 +430,7 @@ function updateSankey(data) {
     .enter()
     .append("text")
     .attr("class", "sankey-node-label")
-    .style("font-size", "11px")
+    .style("font-size", "8.5px")
     .style("font-weight", "600")
     .style("fill", "#e4ecf5ff")
     .style("pointer-events", "none")

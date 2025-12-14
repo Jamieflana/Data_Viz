@@ -207,3 +207,15 @@ function updateAllViewsForLeague(leagueCode) {
   activeLeagueFilter = leagueCode;
   updateAll();
 }
+
+// Handle window resize
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    if (worldDataLoaded) {
+      initializeChoropleth();
+      updateAll();
+    }
+  }, 300);
+});

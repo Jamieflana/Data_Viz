@@ -62,7 +62,7 @@ d3.json("data/world.json").then((world) => {
 function initializeChoropleth() {
   const container = document.getElementById("choropleth");
   const width = container.clientWidth;
-  const height = container.clientHeight || 520;
+  const height = container.clientHeight;
 
   d3.select("#choropleth").select("svg").remove();
 

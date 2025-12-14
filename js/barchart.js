@@ -113,7 +113,7 @@ function updateBarChart(data) {
       const isDomestic = d[0] === 0; // lower stack
       return isDomestic ? base : d3.color(base).darker(1);
     })
-    .on("click", (e, d) => updateAllViewsForLeague(d.data.league))
+   // .on("click", (e, d) => updateAllViewsForLeague(d.data.league))
     .on("mouseover", function (event, d) {
       const dom = d.data.domestic;
       const intl = d.data.international;

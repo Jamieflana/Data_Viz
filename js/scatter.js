@@ -117,31 +117,21 @@ function updateScatter(data) {
     isSampled = true;
   }
 
+  // ALWAYS RECALCULATE DIMENSIONS FIRST
   const container = document.getElementById("scatter");
-  const innerWidth =
-    container.clientWidth - scatterMargin.left - scatterMargin.right;
-  const innerHeight =
-    container.clientHeight - scatterMargin.top - scatterMargin.bottom;
+  const containerWidth = container.clientWidth;
+  const containerHeight = container.clientHeight;
 
-  scatterWidth = innerWidth;
-  scatterHeight = innerHeight;
+  scatterWidth = containerWidth - scatterMargin.left - scatterMargin.right;
+  scatterHeight = containerHeight - scatterMargin.top - scatterMargin.bottom;
 
   // Create SVG / main group ONCE
   if (!scatterSVG) {
     d3.select("#scatter").select("svg").remove();
 
-    scatterSVG = d3
-      .select("#scatter")
-      .append("svg")
-      .attr("width", "100%")
-      .attr("height", "100%");
+    scatterSVG = d3.select("#scatter").append("svg").style("display", "block");
 
-    scatterMainGroup = scatterSVG
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${scatterMargin.left},${scatterMargin.top})`
-      );
+    scatterMainGroup = scatterSVG.append("g");
 
     scatterMainGroup.append("g").attr("class", "x-axis axis");
     scatterMainGroup.append("g").attr("class", "y-axis axis");
@@ -152,6 +142,14 @@ function updateScatter(data) {
     scatterMainGroup.append("text").attr("class", "scatter-sample");
   }
 
+  // UPDATE SVG SIZE EVERY TIME
+  scatterSVG.attr("width", containerWidth).attr("height", containerHeight);
+
+  scatterMainGroup.attr(
+    "transform",
+    `translate(${scatterMargin.left},${scatterMargin.top})`
+  );
+
   if (!data.length) {
     scatterMainGroup.selectAll("path.dot").remove();
     scatterMainGroup.selectAll(".trend-line").remove();
@@ -159,7 +157,7 @@ function updateScatter(data) {
       .select(".scatter-sample")
       .attr("x", 5)
       .attr("y", scatterHeight - 5)
-      .style("font-size", "10px")
+      .style("font-size", "5px")
       .style("fill", "#666")
       .text(`n = 0 transfers`);
     return;
@@ -173,7 +171,6 @@ function updateScatter(data) {
   data = data.filter((d) => d.transfer_fee >= minBound);
 
   //SCALES
-
   scatterX = d3.scaleLinear().domain([15, 35]).range([0, scatterWidth]);
 
   scatterY = d3
@@ -219,14 +216,11 @@ function updateScatter(data) {
     POR: 0.6,
   };
 
-  //GRADIENT COLOR FUNCTION FOR SINGLE LEAGUE VIEW
-
   const getFillColor = (d) => {
     if (!activeScatterLeagueFilter) {
       return color(d.league);
     }
 
-    // Single league: use gradient from base color to lighter shade
     const baseColor = d3.color(color(d.league));
     const feeScale = d3
       .scaleLinear()
@@ -237,8 +231,6 @@ function updateScatter(data) {
     return d3.interpolateRgb(baseColor, baseColor.brighter(1.5))(brightness);
   };
 
-  //PRECOMPUTE DISPLAY POSITIONS
-
   const baseJitter = activeLeague ? 14 : 22;
 
   data.forEach((d) => {
@@ -247,29 +239,33 @@ function updateScatter(data) {
     const yBase = scatterY(d.transfer_fee);
     const yJittered = yBase + dy * 4 + posOffset * 1.5;
     const padding = 4;
-    d._displayY = Math.max(0, Math.min(scatterHeight - padding, yJittered)); // CLAMP Y TO THE BOTTOM OF X AXIS
+    d._displayY = Math.max(0, Math.min(scatterHeight - padding, yJittered));
   });
 
   //AXES
-
   scatterMainGroup
     .select(".x-axis")
     .attr("transform", `translate(0, ${scatterHeight})`)
+    .transition()
+    .duration(300)
     .call(d3.axisBottom(scatterX));
 
   const tickValues = [
     500000, 1e6, 2e6, 5e6, 1e7, 2e7, 5e7, 1e8, 2e8, 3e8,
   ].filter((v) => v >= minBound && v <= maxBound);
 
-  scatterMainGroup.select(".y-axis").call(
-    d3
-      .axisLeft(scatterY)
-      .tickValues(tickValues)
-      .tickFormat((d) => "€" + d3.format(".2s")(d).replace("G", "B"))
-  );
+  scatterMainGroup
+    .select(".y-axis")
+    .transition()
+    .duration(300)
+    .call(
+      d3
+        .axisLeft(scatterY)
+        .tickValues(tickValues)
+        .tickFormat((d) => "€" + d3.format(".2s")(d).replace("G", "B"))
+    );
 
   //AXIS LABELS
-
   const axisLabels = scatterMainGroup.select(".axis-labels");
   axisLabels.selectAll("*").remove();
 
@@ -297,7 +293,6 @@ function updateScatter(data) {
     .text("Transfer Fee (€, log scale)");
 
   //BRUSHING
-
   const brushLayer = scatterMainGroup.select(".brush-bg");
   brushLayer.selectAll("*").remove();
 
@@ -337,7 +332,6 @@ function updateScatter(data) {
   }
 
   //DRAW POINTS
-
   const points = scatterMainGroup
     .selectAll("path.dot")
     .data(
@@ -438,7 +432,6 @@ function updateScatter(data) {
     );
 
   //LEAGUE LEGEND
-
   const legendGroup = scatterMainGroup.select(".legend");
   legendGroup.selectAll("*").remove();
 
@@ -488,17 +481,14 @@ function updateScatter(data) {
   });
 
   //POSITION LEGEND
-
   const posLegendGroup = scatterMainGroup.select(".position-legend");
   posLegendGroup.selectAll("*").remove();
 
-  // Position: top-right, tighter inset
   const posLegendX = scatterWidth - 90;
   const posLegendY = 8;
 
   posLegendGroup.attr("transform", `translate(${posLegendX}, ${posLegendY})`);
 
-  // Compact background panel
   posLegendGroup
     .append("rect")
     .attr("width", 100)
@@ -516,7 +506,6 @@ function updateScatter(data) {
     { code: "FW", label: "FWD", shape: d3.symbolDiamond },
   ];
 
-  // Tighter grid geometry
   const colWidth = 52;
   const rowHeight = 20;
   const startX = 8;
@@ -563,15 +552,15 @@ function updateScatter(data) {
     .select(".scatter-sample")
     .attr("x", 5)
     .attr("y", scatterHeight - 8)
-    .style("font-size", "10px")
+    .style("font-size", "5px")
     .style("fill", "#e4ecf5ff")
+    .style("opacity", 0.55)
     .text(
       isSampled
-        ? `n = ${data.length.toLocaleString()} shown (of ${originalCount.toLocaleString()} total)`
+        ? `${data.length.toLocaleString()} of ${originalCount.toLocaleString()} total`
         : `n = ${data.length.toLocaleString()} transfers`
     );
 }
-
 
 //HELPER FUNCTIONS
 function getPositionGroup(pos) {
