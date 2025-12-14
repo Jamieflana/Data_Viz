@@ -100,7 +100,7 @@ function initializeChoropleth() {
   choroplethLegendGroup = choroplethSVG
     .append("g")
     .attr("class", "choropleth-legend")
-    .attr("transform", `translate(${width - 850}, 250)`);
+    .attr("transform", `translate(20, ${height - 45})`);
 
   //ZOOM BEHAVIOR
 

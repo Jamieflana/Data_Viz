@@ -486,20 +486,21 @@ function updateSankey(data) {
   const metaGroup = sankeyMainGroup.select("g.meta");
   metaGroup.selectAll("*").remove();
 
+  const yearLabel =
+    yearMode === "single" ? `${currentSeason}` : `${startYear}–${endYear}`;
+
+  console.log(yearLabel);
+
   // Title
   metaGroup
     .append("text")
-    .attr("x", (sankeyWidth - 10) / 2)
+    .attr("x", (sankeyWidth - 160) / 2)
     .attr("y", -8)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .style("font-weight", "bold")
     .style("fill", "#26b5a2ff")
-    .text(
-      `Transfer Flows: Regions → Leagues (${currentSeason}${
-        yearMode === "cumulative" ? ", cumulative" : ""
-      })`
-    );
+    .text(`Transfer Flows: Regions to Leagues (${yearLabel})`);
 
   metaGroup
     .append("text")

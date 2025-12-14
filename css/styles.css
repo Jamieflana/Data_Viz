@@ -79,7 +79,7 @@ html, body{
 }
 
 #bottomCharts{
-  flex: 0 0 50vh;
+  flex: 0 0 46vh;
   display: flex;
   gap: 10px;
   min-height: 0;
